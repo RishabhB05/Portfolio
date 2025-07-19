@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Download, Play } from "lucide-react"
+import { Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import WavyUnderline from "./wavy-underline"
@@ -19,7 +19,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ y, scrollToSection }: HeroSectionProps) {
   const [isClient, setIsClient] = useState(false)
-
+  
   useEffect(() => {
     setIsClient(true)
   }, [])
@@ -129,22 +129,6 @@ export default function HeroSection({ y, scrollToSection }: HeroSectionProps) {
                   <Download className="w-4 h-4 mr-2" />
                   Get Resume
                 </a>
-              </Button>
-            </motion.div>
-
-            <motion.div
-              whileHover={{ scale: 1.03, y: -1 }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >
-              <Button
-                variant="outline"
-                size="lg"
-                className="dark:border-white/30 dark:text-white border-gray-300 text-gray-700 px-8 py-3 rounded-full dark:bg-transparent bg-white/50 dark:hover:bg-white/10 hover:bg-gray-100"
-                onClick={() => alert("Video playback not implemented yet!")} // Placeholder for video
-              >
-                <Play className="w-4 h-4 mr-2" />
-                Watch Video
               </Button>
             </motion.div>
           </motion.div>

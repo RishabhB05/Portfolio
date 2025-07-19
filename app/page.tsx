@@ -25,6 +25,8 @@ import {
   Cpu,
   Layers,
   Bot,
+  Menu,
+  X,
 } from "lucide-react"
 import { projects } from "../lib/projects"
 import { Button } from "@/components/ui/button"
@@ -40,6 +42,7 @@ import SkillCard from "../components/skill-card"
 
 export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("home")
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { scrollYProgress } = useScroll()
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
 
@@ -174,6 +177,7 @@ export default function Portfolio() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     element?.scrollIntoView({ behavior: "smooth" })
+    setIsMobileMenuOpen(false) // Close mobile menu when navigating
   }
 
   return (
@@ -187,18 +191,20 @@ export default function Portfolio() {
         transition={{ duration: 0.5 }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <motion.div className="text-2xl font-bold" whileHover={{ scale: 1.05 }}>
+          <div className="flex justify-between items-center py-3 md:py-4">
+            <motion.div className="text-xl md:text-2xl font-bold" whileHover={{ scale: 1.05 }}>
               <span className="dark:text-white text-gray-900">{"<RB />"}</span>
             </motion.div>
-            <div className="flex items-center space-x-6">
-              <div className="hidden md:flex space-x-8">
+            
+            {/* Desktop Navigation */}
+            <div className="flex items-center space-x-4 md:space-x-6">
+              <div className="hidden md:flex space-x-6 lg:space-x-8">
                 {["home", "about", "education", "projects", "skills", "certifications", "experience", "contact"].map(
                   (item) => (
                     <motion.button
                       key={item}
                       onClick={() => scrollToSection(item)}
-                      className={`capitalize transition-colors relative ${
+                      className={`capitalize transition-colors relative text-sm lg:text-base ${
                         activeSection === item
                           ? "dark:text-blue-400 text-blue-700 font-semibold"
                           : "dark:text-slate-300 text-slate-600 dark:hover:text-blue-300 hover:text-blue-600"
@@ -217,24 +223,66 @@ export default function Portfolio() {
                   ),
                 )}
               </div>
+              
               <ThemeToggle />
+              
+              {/* Mobile Menu Button */}
+              <motion.button
+                className="md:hidden p-2 rounded-lg dark:text-white text-gray-900 dark:hover:bg-blue-800/50 hover:bg-gray-100 transition-colors"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </motion.button>
             </div>
           </div>
+          
+          {/* Mobile Navigation Menu */}
+          {isMobileMenuOpen && (
+            <motion.div
+              className="md:hidden border-t dark:border-gray-700 border-gray-200 py-4"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="flex flex-col space-y-3">
+                {["home", "about", "education", "projects", "skills", "certifications", "experience", "contact"].map(
+                  (item) => (
+                    <motion.button
+                      key={item}
+                      onClick={() => scrollToSection(item)}
+                      className={`capitalize transition-colors text-left py-2 px-3 rounded-lg ${
+                        activeSection === item
+                          ? "dark:text-blue-400 text-blue-700 font-semibold dark:bg-blue-800/30 bg-blue-50"
+                          : "dark:text-slate-300 text-slate-600 dark:hover:text-blue-300 hover:text-blue-600 dark:hover:bg-gray-700/50 hover:bg-gray-50"
+                      }`}
+                      whileHover={{ x: 5 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {item}
+                    </motion.button>
+                  ),
+                )}
+              </div>
+            </motion.div>
+          )}
         </div>
       </motion.nav>
       {/* Hero Section */}
       <HeroSection y={y} scrollToSection={scrollToSection} />
       {/* About Section */}
-      <section id="about" className="py-20 dark:bg-[#1a1a2e] bg-white/70 relative">
+      <section id="about" className="py-16 md:py-20 dark:bg-[#1a1a2e] bg-white/70 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-12 md:mb-16"
           >
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <GradientText gradient="dark:from-blue-400 dark:via-teal-400 dark:to-blue-500 from-blue-700 via-teal-600 to-blue-800">
                 About Me
               </GradientText>
@@ -249,15 +297,15 @@ export default function Portfolio() {
             className="max-w-4xl mx-auto"
           >
             <MagicCard
-              className="p-8 dark:bg-[#2a2a4a]/70 bg-white/70 dark:border-gray-700 border-gray-200"
+              className="p-6 md:p-8 dark:bg-[#2a2a4a]/70 bg-white/70 dark:border-gray-700 border-gray-200"
               gradientColor="#6366f1"
             >
-              <div className="grid md:grid-cols-2 gap-8 items-center">
-                <div>
-                  <h3 className="text-2xl font-bold dark:text-white text-slate-800 mb-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-center">
+                <div className="order-2 lg:order-1">
+                  <h3 className="text-xl md:text-2xl font-bold dark:text-white text-slate-800 mb-4">
                     Passionate Computer Science Student
                   </h3>
-                  <p className="dark:text-slate-300 text-slate-600 mb-6 leading-relaxed">
+                  <p className="dark:text-slate-300 text-slate-600 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
                     <TypingAnimation>
                     I'm a dedicated Computer Science Engineering student at VIT Bhopal with a strong passion for
                     full-stack development and artificial intelligence. With hands-on experience in building scalable
@@ -265,7 +313,7 @@ export default function Portfolio() {
                     that make a real impact.
                     </TypingAnimation>
                   </p>
-                  <p className="dark:text-slate-300 text-slate-600 mb-6 leading-relaxed">
+                  <p className="dark:text-slate-300 text-slate-600 mb-4 md:mb-6 leading-relaxed text-sm md:text-base">
                      <TypingAnimation>
                     My journey includes developing social networking platforms, AI-powered career coaching applications,
                     and employer management systems. I'm always eager to learn new technologies and take on challenging
@@ -276,7 +324,7 @@ export default function Portfolio() {
                     <motion.div whileHover={{ scale: 1.05 }}>
                       <Badge
                         variant="secondary"
-                        className="dark:bg-blue-800 dark:text-blue-200 bg-blue-50 text-blue-700"
+                        className="dark:bg-blue-800 dark:text-blue-200 bg-blue-50 text-blue-700 text-xs md:text-sm"
                       >
                         <Sparkles className="w-3 h-3 mr-1" />
                         Full Stack Developer
@@ -285,7 +333,7 @@ export default function Portfolio() {
                     <motion.div whileHover={{ scale: 1.05 }}>
                       <Badge
                         variant="secondary"
-                        className="dark:bg-teal-800 dark:text-teal-200 bg-teal-50 text-teal-700"
+                        className="dark:bg-teal-800 dark:text-teal-200 bg-teal-50 text-teal-700 text-xs md:text-sm"
                       >
                         <Sparkles className="w-3 h-3 mr-1" />
                         AI Enthusiast
@@ -294,7 +342,7 @@ export default function Portfolio() {
                     <motion.div whileHover={{ scale: 1.05 }}>
                       <Badge
                         variant="secondary"
-                        className="dark:bg-emerald-800 dark:text-emerald-200 bg-emerald-50 text-emerald-700"
+                        className="dark:bg-emerald-800 dark:text-emerald-200 bg-emerald-50 text-emerald-700 text-xs md:text-sm"
                       >
                         <Sparkles className="w-3 h-3 mr-1" />
                         Problem Solver
@@ -302,7 +350,7 @@ export default function Portfolio() {
                     </motion.div>
                   </div>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-3 md:space-y-4 order-1 lg:order-2">
                   {[
                     { icon: MapPin, text: "Bhopal, India" },
                     { icon: GraduationCap, text: "VIT Bhopal - CSE" },
@@ -319,8 +367,8 @@ export default function Portfolio() {
                       viewport={{ once: true }}
                       whileHover={{ x: 5 }}
                     >
-                      <item.icon className="w-5 h-5 dark:text-blue-400 text-blue-600" />
-                      <span className="dark:text-slate-300 text-slate-600">{item.text}</span>
+                      <item.icon className="w-4 h-4 md:w-5 md:h-5 dark:text-blue-400 text-blue-600 flex-shrink-0" />
+                      <span className="dark:text-slate-300 text-slate-600 text-sm md:text-base break-all">{item.text}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -330,16 +378,16 @@ export default function Portfolio() {
         </div>
       </section>
       {/* Education Section */}
-      <section id="education" className="py-20 dark:bg-[#1a1a2e] bg-white">
+      <section id="education" className="py-16 md:py-20 dark:bg-[#1a1a2e] bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-12 md:mb-16"
           >
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <GradientText gradient="dark:from-blue-400 dark:via-teal-400 dark:to-blue-500 from-blue-700 via-teal-600 to-blue-800">
                 Education
               </GradientText>
@@ -355,37 +403,37 @@ export default function Portfolio() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.2 }}
                 viewport={{ once: true }}
-                className="mb-8 last:mb-0"
+                className="mb-6 md:mb-8 last:mb-0"
               >
                 <MagicCard
-                  className="p-6 dark:bg-[#2a2a4a]/70 bg-white/70 dark:border-gray-700 border-gray-200"
+                  className="p-4 md:p-6 dark:bg-[#2a2a4a]/70 bg-white/70 dark:border-gray-700 border-gray-200"
                   gradientColor="#14b8a6"
                 >
-                  <div className="flex items-start space-x-4">
+                  <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
                     <motion.div
-                      className="w-12 h-12 dark:bg-blue-600 bg-blue-700 rounded-full flex items-center justify-center flex-shrink-0"
+                      className="w-10 h-10 md:w-12 md:h-12 dark:bg-blue-600 bg-blue-700 rounded-full flex items-center justify-center flex-shrink-0 mx-auto sm:mx-0"
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.5 }}
                     >
-                      <edu.icon className="w-6 h-6 text-white" />
+                      <edu.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
                     </motion.div>
-                    <div className="flex-1">
+                    <div className="flex-1 text-center sm:text-left">
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                        <h3 className="text-xl font-bold dark:text-white text-slate-800">{edu.degree}</h3>
+                        <h3 className="text-lg md:text-xl font-bold dark:text-white text-slate-800 mb-2 md:mb-0">{edu.degree}</h3>
                         <Badge
                           variant="outline"
-                          className="w-fit mt-2 md:mt-0 dark:bg-white/10 dark:text-slate-300 dark:border-slate-600 bg-gray-100 text-slate-600 border-gray-300"
+                          className="w-fit mx-auto sm:mx-0 md:mt-0 dark:bg-white/10 dark:text-slate-300 dark:border-slate-600 bg-gray-100 text-slate-600 border-gray-300 text-xs md:text-sm"
                         >
                           {edu.period}
                         </Badge>
                       </div>
-                      <p className="text-lg font-semibold dark:text-blue-400 text-blue-600 mb-1">{edu.institution}</p>
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                        <p className="dark:text-slate-300 text-slate-600 flex items-center">
-                          <MapPin className="w-4 h-4 mr-1" />
+                      <p className="text-base md:text-lg font-semibold dark:text-blue-400 text-blue-600 mb-2">{edu.institution}</p>
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-1 sm:space-y-0">
+                        <p className="dark:text-slate-300 text-slate-600 flex items-center justify-center sm:justify-start text-sm md:text-base">
+                          <MapPin className="w-3 h-3 md:w-4 md:h-4 mr-1 flex-shrink-0" />
                           {edu.location}
                         </p>
-                        <p className="dark:text-green-400 text-green-600 font-semibold mt-1 sm:mt-0">{edu.grade}</p>
+                        <p className="dark:text-green-400 text-green-600 font-semibold text-sm md:text-base text-center sm:text-right">{edu.grade}</p>
                       </div>
                     </div>
                   </div>
@@ -397,16 +445,16 @@ export default function Portfolio() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-10 dark:bg-[#1a1a2e] bg-white/70">
+      <section id="projects" className="py-12 md:py-16 dark:bg-[#1a1a2e] bg-white/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-8"
+            className="text-center mb-8 md:mb-12"
           >
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <GradientText gradient="dark:from-blue-400 dark:via-teal-400 dark:to-blue-500 from-blue-700 via-teal-600 to-blue-800">
                 Featured Projects
               </GradientText>
@@ -418,7 +466,7 @@ export default function Portfolio() {
             <button
               type="button"
               aria-label="Scroll Left"
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 dark:bg-[#23234a]/80 rounded-full shadow p-2 hover:bg-blue-100 dark:hover:bg-blue-900 transition hidden md:block"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 dark:bg-[#23234a]/80 rounded-full shadow p-2 hover:bg-blue-100 dark:hover:bg-blue-900 transition hidden lg:block"
               onClick={() => {
                 const container = document.getElementById('project-scroll-container');
                 if (container) container.scrollBy({ left: -440, behavior: 'smooth' });
@@ -429,11 +477,11 @@ export default function Portfolio() {
               </svg>
             </button>
             <div id="project-scroll-container" className="overflow-x-auto no-scrollbar">
-              <div className="flex flex-row gap-6 pb-4 min-w-full">
+              <div className="flex flex-row gap-4 md:gap-6 pb-4 min-w-full">
                 {projects.map((project, index) => (
                   <motion.div
                     key={project.title}
-                    className="group w-[420px] flex-shrink-0 mx-2 flex select-none"
+                    className="group w-[320px] sm:w-[360px] md:w-[420px] flex-shrink-0 mx-1 md:mx-2 flex select-none"
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: index * 0.2 }}
@@ -445,22 +493,22 @@ export default function Portfolio() {
                     >
                       <div className={`h-2 bg-gradient-to-r ${project.color}`}></div>
                       <div className="p-0 flex flex-col h-full">
-                        <div className="p-6 flex-1 flex flex-col">
+                        <div className="p-4 md:p-6 flex-1 flex flex-col">
                           <div className="flex items-center space-x-3 mb-4">
                             <motion.div
-                              className={`w-12 h-12 bg-gradient-to-r ${project.color} rounded-lg flex items-center justify-center`}
+                              className={`w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r ${project.color} rounded-lg flex items-center justify-center flex-shrink-0`}
                               whileHover={{ rotate: 360 }}
                               transition={{ duration: 0.5 }}
                             >
-                              <project.icon className="w-6 h-6 text-white" />
+                              <project.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
                             </motion.div>
-                            <h3 className="text-xl font-bold dark:text-white text-slate-800">{project.title}</h3>
+                            <h3 className="text-lg md:text-xl font-bold dark:text-white text-slate-800 leading-tight">{project.title}</h3>
                           </div>
-                          <p className="dark:text-slate-300 text-slate-600 mb-4 leading-relaxed text-sm">{project.description}</p>
+                          <p className="dark:text-slate-300 text-slate-600 mb-4 leading-relaxed text-xs md:text-sm">{project.description}</p>
                           <div className="mb-4">
-                            <h4 className="text-base font-semibold dark:text-white text-slate-800 mb-2">Key Features:</h4>
+                            <h4 className="text-sm md:text-base font-semibold dark:text-white text-slate-800 mb-2">Key Features:</h4>
                             <ul className="space-y-1">
-                              {project.features.map((feature, idx) => (
+                              {project.features.slice(0, 4).map((feature, idx) => (
                                 <motion.li
                                   key={idx}
                                   className="flex items-start space-x-2"
@@ -469,14 +517,17 @@ export default function Portfolio() {
                                   transition={{ duration: 0.5, delay: idx * 0.1 }}
                                   viewport={{ once: true }}
                                 >
-                                  <Star className="w-4 h-4 dark:text-yellow-400 text-yellow-500 mt-0.5 flex-shrink-0" />
-                                  <span className="dark:text-slate-300 text-slate-600 text-xs">{feature}</span>
+                                  <Star className="w-3 h-3 md:w-4 md:h-4 dark:text-yellow-400 text-yellow-500 mt-0.5 flex-shrink-0" />
+                                  <span className="dark:text-slate-300 text-slate-600 text-xs leading-tight">{feature}</span>
                                 </motion.li>
                               ))}
+                              {project.features.length > 4 && (
+                                <li className="text-xs text-slate-500 italic">+{project.features.length - 4} more features</li>
+                              )}
                             </ul>
                           </div>
                           <div className="mb-4">
-                            <h4 className="text-base font-semibold dark:text-white text-slate-800 mb-2">Technologies:</h4>
+                            <h4 className="text-sm md:text-base font-semibold dark:text-white text-slate-800 mb-2">Technologies:</h4>
                             <div className="flex flex-wrap gap-1">
                               {project.tech.map((tech, idx) => (
                                 <motion.div
@@ -498,28 +549,28 @@ export default function Portfolio() {
                             </div>
                           </div>
                           <div className="flex space-x-2 mt-auto">
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex-1">
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="dark:border-slate-600 dark:bg-transparent dark:text-white border-slate-300 bg-transparent text-slate-700 dark:hover:bg-slate-700 hover:bg-slate-100"
+                                className="w-full dark:border-slate-600 dark:bg-transparent dark:text-white border-slate-300 bg-transparent text-slate-700 dark:hover:bg-slate-700 hover:bg-slate-100 text-xs md:text-sm"
                               >
-                                <Github className="w-4 h-4 mr-2" />
+                                <Github className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
                                 Code
                               </Button>
                             </motion.div>
-                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex-1">
                               <Button
                                 size="sm"
-                                className="dark:bg-blue-600 dark:hover:bg-blue-700 bg-blue-700 hover:bg-blue-800 text-white"
+                                className="w-full dark:bg-blue-600 dark:hover:bg-blue-700 bg-blue-700 hover:bg-blue-800 text-white text-xs md:text-sm"
                               >
-                                <ExternalLink className="w-4 h-4 mr-2" />
-                                Live Demo
+                                <ExternalLink className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
+                                Demo
                               </Button>
                             </motion.div>
                           </div>
                         </div>
-                        <div className="relative overflow-hidden h-40 flex-shrink-0">
+                        <div className="relative overflow-hidden h-32 md:h-40 flex-shrink-0">
                           <motion.img
                             src={project.image || "/placeholder.svg"}
                             alt={project.title}
@@ -538,7 +589,7 @@ export default function Portfolio() {
             <button
               type="button"
               aria-label="Scroll Right"
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 dark:bg-[#23234a]/80 rounded-full shadow p-2 hover:bg-blue-100 dark:hover:bg-blue-900 transition hidden md:block"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 dark:bg-[#23234a]/80 rounded-full shadow p-2 hover:bg-blue-100 dark:hover:bg-blue-900 transition hidden lg:block"
               onClick={() => {
                 const container = document.getElementById('project-scroll-container');
                 if (container) container.scrollBy({ left: 440, behavior: 'smooth' });
@@ -553,16 +604,16 @@ export default function Portfolio() {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="py-16 dark:bg-[#1a1a2e] bg-white">
+      <section id="skills" className="py-12 md:py-16 dark:bg-[#1a1a2e] bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-8 md:mb-12"
           >
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <GradientText gradient="dark:from-blue-400 dark:via-teal-400 dark:to-blue-500 from-blue-700 via-teal-600 to-blue-800">
                 Skills & Technologies
               </GradientText>
@@ -570,7 +621,7 @@ export default function Portfolio() {
             <div className="w-24 h-1 dark:bg-blue-400 bg-blue-600 mx-auto"></div>
           </motion.div>
 
-          <div className="space-y-8">
+          <div className="space-y-6 md:space-y-8">
             {Object.entries(skills).map(([category, skillList], categoryIndex) => (
               <motion.div
                 key={category}
@@ -580,11 +631,11 @@ export default function Portfolio() {
                 viewport={{ once: true }}
               >
                 <MagicCard
-                  className="p-6 dark:bg-[#2a2a4a]/70 bg-white/70 dark:border-gray-700 border-gray-200"
+                  className="p-4 md:p-6 dark:bg-[#2a2a4a]/70 bg-white/70 dark:border-gray-700 border-gray-200"
                   gradientColor="#14b8a6"
                 >
-                  <h3 className="text-xl font-bold dark:text-white text-slate-800 mb-6 text-center">{category}</h3>
-                  <div className="flex flex-wrap justify-center gap-3">
+                  <h3 className="text-lg md:text-xl font-bold dark:text-white text-slate-800 mb-4 md:mb-6 text-center">{category}</h3>
+                  <div className="flex flex-wrap justify-center gap-2 md:gap-3">
                     {skillList.map((skill, index) => (
                       <SkillCard
                         key={skill.name}
@@ -606,13 +657,13 @@ export default function Portfolio() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             viewport={{ once: true }}
-            className="mt-8"
+            className="mt-6 md:mt-8"
           >
             <MagicCard
               className="p-4 text-center dark:bg-[#2a2a4a]/70 bg-white/70 dark:border-gray-700 border-gray-200"
               gradientColor="#6366f1"
             >
-              <h3 className="text-lg font-bold mb-3">
+              <h3 className="text-base md:text-lg font-bold mb-3">
                 <GradientText gradient="dark:from-blue-400 dark:via-teal-400 dark:to-blue-500 from-blue-700 via-teal-600 to-blue-800">
                   Coursework
                 </GradientText>
@@ -630,7 +681,7 @@ export default function Portfolio() {
                     >
                       <Badge
                         variant="secondary"
-                        className="dark:bg-slate-700 dark:text-slate-200 bg-white/80 text-slate-700 px-3 py-1 text-sm"
+                        className="dark:bg-slate-700 dark:text-slate-200 bg-white/80 text-slate-700 px-2 md:px-3 py-1 text-xs md:text-sm"
                       >
                         {course}
                       </Badge>
@@ -643,16 +694,16 @@ export default function Portfolio() {
         </div>
       </section>
       {/* Certifications Section */}
-      <section id="certifications" className="py-10 dark:bg-[#1a1a2e] bg-white/70">
+      <section id="certifications" className="py-12 md:py-16 dark:bg-[#1a1a2e] bg-white/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-12 md:mb-16"
           >
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <GradientText gradient="dark:from-blue-400 dark:via-teal-400 dark:to-blue-500 from-blue-700 via-teal-600 to-blue-800">
                 Certifications
               </GradientText>
@@ -660,7 +711,7 @@ export default function Portfolio() {
             <div className="w-24 h-1 dark:bg-blue-400 bg-blue-600 mx-auto"></div>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {certifications.map((cert, index) => (
               <motion.div
                 key={cert.title}
@@ -676,23 +727,23 @@ export default function Portfolio() {
                   gradientColor="#f59e0b"
                 >
                   <div className={`h-2 bg-gradient-to-r ${cert.color}`}></div>
-                  <div className="p-6">
-                    <div className="flex items-start space-x-4">
+                  <div className="p-4 md:p-6">
+                    <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
                       <motion.div
-                        className={`w-12 h-12 bg-gradient-to-r ${cert.color} rounded-lg flex items-center justify-center flex-shrink-0`}
+                        className={`w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r ${cert.color} rounded-lg flex items-center justify-center flex-shrink-0 mx-auto sm:mx-0`}
                         whileHover={{ rotate: 360 }}
                         transition={{ duration: 0.5 }}
                       >
-                        <cert.icon className="w-6 h-6 text-white" />
+                        <cert.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
                       </motion.div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-bold dark:text-white text-slate-800 mb-2 group-hover:dark:text-blue-400 group-hover:text-blue-600 transition-colors">
+                      <div className="flex-1 text-center sm:text-left">
+                        <h3 className="text-base md:text-lg font-bold dark:text-white text-slate-800 mb-2 group-hover:dark:text-blue-400 group-hover:text-blue-600 transition-colors leading-tight">
                           {cert.title}
                         </h3>
-                        <p className="dark:text-blue-400 text-blue-600 font-semibold mb-2">{cert.issuer}</p>
-                        <div className="flex items-center dark:text-slate-400 text-slate-500">
-                          <Calendar className="w-4 h-4 mr-1" />
-                          <span className="text-sm">{cert.date}</span>
+                        <p className="dark:text-blue-400 text-blue-600 font-semibold mb-2 text-sm md:text-base">{cert.issuer}</p>
+                        <div className="flex items-center justify-center sm:justify-start dark:text-slate-400 text-slate-500">
+                          <Calendar className="w-3 h-3 md:w-4 md:h-4 mr-1 flex-shrink-0" />
+                          <span className="text-xs md:text-sm">{cert.date}</span>
                         </div>
                       </div>
                     </div>
@@ -704,16 +755,16 @@ export default function Portfolio() {
         </div>
       </section>
       {/* Experience Section */}
-      <section id="experience" className="py-10 dark:bg-[#1a1a2e] bg-white">
+      <section id="experience" className="py-12 md:py-16 dark:bg-[#1a1a2e] bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-12 md:mb-16"
           >
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <GradientText gradient="dark:from-blue-400 dark:via-teal-400 dark:to-blue-500 from-blue-700 via-teal-600 to-blue-800">
                 Positions of Responsibility
               </GradientText>
@@ -721,7 +772,7 @@ export default function Portfolio() {
             <div className="w-24 h-1 dark:bg-blue-400 bg-blue-600 mx-auto"></div>
           </motion.div>
 
-          <div className="max-w-4xl mx-auto space-y-8">
+          <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
             {positions.map((position, index) => (
               <motion.div
                 key={index}
@@ -731,42 +782,42 @@ export default function Portfolio() {
                 viewport={{ once: true }}
               >
                 <MagicCard
-                  className="p-6 dark:bg-[#2a2a4a]/70 bg-white/70 dark:border-gray-700 border-gray-200"
+                  className="p-4 md:p-6 dark:bg-[#2a2a4a]/70 bg-white/70 dark:border-gray-700 border-gray-200"
                   gradientColor="#10b981"
                 >
-                  <div className="flex items-start space-x-4">
+                  <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
                     <motion.div
-                      className="w-12 h-12 dark:bg-blue-600 bg-blue-700 rounded-full flex items-center justify-center flex-shrink-0"
+                      className="w-10 h-10 md:w-12 md:h-12 dark:bg-blue-600 bg-blue-700 rounded-full flex items-center justify-center flex-shrink-0 mx-auto sm:mx-0"
                       whileHover={{ rotate: 360 }}
                       transition={{ duration: 0.5 }}
                     >
-                      <position.icon className="w-6 h-6 text-white" />
+                      <position.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
                     </motion.div>
-                    <div className="flex-1">
+                    <div className="flex-1 text-center sm:text-left">
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-3">
-                        <h3 className="text-xl font-bold dark:text-white text-slate-800">{position.title}</h3>
+                        <h3 className="text-lg md:text-xl font-bold dark:text-white text-slate-800 mb-2 md:mb-0">{position.title}</h3>
                         <Badge
                           variant="outline"
-                          className="w-fit mt-2 md:mt-0 dark:bg-white/10 dark:text-slate-300 dark:border-slate-600 bg-gray-100 text-slate-600 border-gray-300"
+                          className="w-fit mx-auto sm:mx-0 md:mt-0 dark:bg-white/10 dark:text-slate-300 dark:border-slate-600 bg-gray-100 text-slate-600 border-gray-300 text-xs md:text-sm"
                         >
                           {position.period}
                         </Badge>
                       </div>
-                      <p className="text-lg font-semibold dark:text-blue-400 text-blue-600 mb-4">
+                      <p className="text-base md:text-lg font-semibold dark:text-blue-400 text-blue-600 mb-4">
                         {position.organization}
                       </p>
                       <ul className="space-y-2">
                         {position.responsibilities.map((responsibility, idx) => (
                           <motion.li
                             key={idx}
-                            className="flex items-start space-x-2"
+                            className="flex items-start space-x-2 text-left"
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5, delay: idx * 0.1 }}
                             viewport={{ once: true }}
                           >
-                            <TrendingUp className="w-4 h-4 dark:text-green-400 text-green-500 mt-0.5 flex-shrink-0" />
-                            <span className="dark:text-slate-300 text-slate-600 text-sm">{responsibility}</span>
+                            <TrendingUp className="w-3 h-3 md:w-4 md:h-4 dark:text-green-400 text-green-500 mt-0.5 flex-shrink-0" />
+                            <span className="dark:text-slate-300 text-slate-600 text-xs md:text-sm leading-relaxed">{responsibility}</span>
                           </motion.li>
                         ))}
                       </ul>
@@ -781,12 +832,12 @@ export default function Portfolio() {
       {/* Contact Section */}
       <ContactSection y={y} scrollToSection={scrollToSection} />
       {/* Footer */}
-      <footer className="py-8 dark:bg-[#1a1a2e] bg-gray-900 dark:text-white text-gray-100 relative overflow-hidden">
+      <footer className="py-6 md:py-8 dark:bg-[#1a1a2e] bg-gray-900 dark:text-white text-gray-100 relative overflow-hidden">
         <div className="absolute inset-0 dark:bg-blue-700/10 bg-blue-300/10"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
-            <p className="dark:text-slate-300 text-gray-300">&copy; 2024 Rishabh Baruah. All rights reserved.</p>
-            <p className="mt-2 dark:text-slate-400 text-gray-400">Built with React, Tailwind CSS, and Framer Motion</p>
+            <p className="dark:text-slate-300 text-gray-300 text-sm md:text-base">&copy; 2024 Rishabh Baruah. All rights reserved.</p>
+            <p className="mt-2 dark:text-slate-400 text-gray-400 text-xs md:text-sm">Built with React, Tailwind CSS, and Framer Motion</p>
           </div>
         </div>
       </footer>
