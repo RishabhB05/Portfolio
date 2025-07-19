@@ -78,7 +78,7 @@ export default function Portfolio() {
       degree: "Bachelor of Technology: Computer Science Engineering",
       location: "Bhopal, India",
       period: "2022 - 2026",
-      grade: "CGPA: 8.47/10",
+      grade: "CGPA: 8.17/10",
       icon: GraduationCap,
     },
     {
