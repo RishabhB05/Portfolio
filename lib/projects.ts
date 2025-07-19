@@ -60,18 +60,19 @@ export const projects = [
     live: "#",
   },
   {
-    title: "Clone Projects – UI/UX & Security-Focused Replications",
+    title: "Royal Chess – Real-time Multiplayer Chess Application",
     description:
-      "Developed secure, high-performance clones of popular platforms like Netflix, Pinterest, and Amazon with enhanced UI/UX and data handling efficiency.",
+      "Built a full-stack chess game with real-time multiplayer functionality using Node.js, Express, and Socket.io with comprehensive chess logic and modern responsive design.",
     image: "/placeholder.svg?height=200&width=300",
-    tech: ["React.js", "Next.js", "OAuth", "API Optimization", "UI/UX Design"],
+    tech: ["Node.js", "Express.js", "Socket.io", "Chess.js", "CSS Grid", "JavaScript"],
     features: [
-      "Enhanced UI/UX with React.js and Next.js",
-      "Improved data handling efficiency",
-      "OAuth authentication implementation",
-      "Optimized API performance",
-      "Responsive design across all devices",
-      "Security-focused implementations",
+      "Real-time multiplayer functionality with Socket.io",
+      "Comprehensive chess logic with move validation",
+      "Checkmate detection and game state management",
+      "Chess.js library integration for game rules",
+      "Responsive UI with modern CSS Grid layout",
+      "Modal notifications and real-time game updates",
+      "Seamless user experience across devices",
     ],
     icon: Code,
     color: "from-amber-600 to-orange-500", // Updated color

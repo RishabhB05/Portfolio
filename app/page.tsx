@@ -78,7 +78,7 @@ export default function Portfolio() {
       degree: "Bachelor of Technology: Computer Science Engineering",
       location: "Bhopal, India",
       period: "2022 - 2026",
-      grade: "CGPA: 8.17/10",
+      grade: "CGPA: 8.47/10",
       icon: GraduationCap,
     },
     {
@@ -94,7 +94,7 @@ export default function Portfolio() {
       degree: "CBSE Board Class X",
       location: "Assam, India",
       period: "2019",
-      grade: "88%",
+      grade: "91%",
       icon: ImageIcon,
     },
   ]
@@ -306,7 +306,7 @@ export default function Portfolio() {
                   {[
                     { icon: MapPin, text: "Bhopal, India" },
                     { icon: GraduationCap, text: "VIT Bhopal - CSE" },
-                    { icon: Award, text: "CGPA: 8.17/10" },
+                    { icon: Award, text: "CGPA: 8.47/10" },
                     { icon: Phone, text: "+91 9387530963" },
                     { icon: Mail, text: "rishabhbaruah87@gmail.com" },
                   ].map((item, index) => (
